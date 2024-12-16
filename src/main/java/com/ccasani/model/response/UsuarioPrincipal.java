@@ -53,7 +53,7 @@ public class UsuarioPrincipal implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.usuarioEntity.isEstado();
     }
 
     public static UsuarioPrincipal mapToUsuarioPrincipal(Usuario usuario){

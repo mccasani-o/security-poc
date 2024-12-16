@@ -9,7 +9,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -20,6 +22,8 @@ public class HttpSecurityConfig {
 
     private final AuthenticationProvider daoAuthProvider;
     private final CustomAuthorizationFilter customAuthorizationFilter;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
+    private final AccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -30,10 +34,13 @@ public class HttpSecurityConfig {
                 .authenticationProvider(daoAuthProvider)
                 .addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authReqConfig -> {
-
                     authReqConfig.requestMatchers(HttpMethod.POST, "/api/usuarios/registro").permitAll();
                     authReqConfig.requestMatchers(HttpMethod.POST, "/api/usuarios/login").permitAll();
                     authReqConfig.anyRequest().authenticated();
+                })
+                .exceptionHandling(ex -> {
+                    ex.accessDeniedHandler(this.accessDeniedHandler);
+                    ex.authenticationEntryPoint(this.authenticationEntryPoint);
                 })
                 .build();
 
