@@ -68,7 +68,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     private Map<String, Object> generateExtraClaims(UsuarioPrincipal user) {
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("name",user.getUsername());
+        extraClaims.put("name",user.getUsuarioEntity().getEmail());
         extraClaims.put("role",user.getUsuarioEntity().getRoles());
         extraClaims.put("authorities",user.getAuthorities());
 

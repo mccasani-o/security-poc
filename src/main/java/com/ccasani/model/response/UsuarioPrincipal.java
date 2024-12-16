@@ -33,7 +33,7 @@ public class UsuarioPrincipal implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.usuarioEntity.getClave();
+        return this.usuarioEntity.getEmail();
     }
 
     @Override

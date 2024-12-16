@@ -17,6 +17,7 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
     private final UsuarioRepository usuarioRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("DATA: "+ username);
         Optional<Usuario> usuario= Optional.ofNullable(usuarioRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado")));
         return UsuarioPrincipal.mapToUsuarioPrincipal(usuario.get());
     }
