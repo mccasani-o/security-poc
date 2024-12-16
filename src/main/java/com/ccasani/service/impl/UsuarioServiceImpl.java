@@ -35,7 +35,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     private final AuthenticationManager authenticationManager;
     @Override
     public void registarUsuario(RegistrarUsuarioRequest request) {
-        Rol rol = Rol.builder().nombre("ROLE_ADMIN").build();
+        Rol rol = Rol.builder().nombre("ROLE_ADMIN").permiso("READ_PRODUCT").build();
         rolRepository.save(rol);
 
         this.usuarioRepository.save(this.mapToUsuario(request,rol));

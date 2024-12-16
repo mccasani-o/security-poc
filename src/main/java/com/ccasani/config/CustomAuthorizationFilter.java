@@ -49,7 +49,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         );
         authToken.setDetails(new WebAuthenticationDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authToken);
-        System.out.println("Se acaba de setear el authentication");
 
         //5. Ejecutar el registro de filtros
         filterChain.doFilter(request, response);
