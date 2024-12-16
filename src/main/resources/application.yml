@@ -1,6 +1,6 @@
 spring:
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  #autoconfigure:
+  #  exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
   datasource:
     url: jdbc:mysql://localhost:3306/security-poc
     username: root
@@ -9,7 +9,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
@@ -18,3 +18,9 @@ spring:
 
 server:
   port: 8080
+
+security:
+  jwt:
+    secret-key: bWkgY2xhdmUgZXMgbXV5IHNlZ3VyYSAxMjM0NTY3OCBhYmNkZWZn
+    expiration-in-minutes: '30'
+

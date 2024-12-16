@@ -2,12 +2,14 @@ package com.ccasani.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "rol")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Rol {
@@ -16,6 +18,6 @@ public class Rol {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+
     private String nombre;
 }

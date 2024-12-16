@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -24,11 +23,11 @@ public class Usuario {
     private String clave;
     private boolean estado;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "usuario_rol", // Tabla intermedia
-            joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "rol_id")
-    )
-    private Set<Rol> roles = new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "usuario_rol",
+            joinColumns = @JoinColumn(name = "id_usuario", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "id_rol", referencedColumnName = "id"))
+    private Set<Rol> roles;
+
+
 }
