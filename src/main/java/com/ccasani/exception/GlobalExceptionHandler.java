@@ -1,8 +1,6 @@
 package com.ccasani.exception;
 
 import com.ccasani.model.response.HttpResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,7 +13,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<?> handlerAccessDeniedException(AccessDeniedException exception){
+    public ResponseEntity<?> handlerAccessDeniedException(AccessDeniedException exception) {
 
         HttpResponse apiError = HttpResponse.builder()
                 .status(FORBIDDEN)
