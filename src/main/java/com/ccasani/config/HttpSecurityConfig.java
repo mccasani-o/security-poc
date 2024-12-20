@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,14 +29,15 @@ public class HttpSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        SecurityFilterChain filterChain = http
-                .csrf(csrfConfig -> csrfConfig.disable())
+         return http
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessMagConfig -> sessMagConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(daoAuthProvider)
                 .addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authReqConfig -> {
                     authReqConfig.requestMatchers(HttpMethod.POST, "/api/usuarios/registro").permitAll();
                     authReqConfig.requestMatchers(HttpMethod.POST, "/api/usuarios/login").permitAll();
+                    authReqConfig.requestMatchers(HttpMethod.GET, "/api/usuarios/verificar/**").permitAll();
                     authReqConfig.anyRequest().authenticated();
                 })
                 .exceptionHandling(ex -> {
@@ -44,6 +46,6 @@ public class HttpSecurityConfig {
                 })
                 .build();
 
-        return filterChain;
+
     }
 }

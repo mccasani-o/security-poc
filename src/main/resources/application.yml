@@ -22,5 +22,5 @@ server:
 security:
   jwt:
     secret-key: bWkgY2xhdmUgZXMgbXV5IHNlZ3VyYSAxMjM0NTY3OCBhYmNkZWZn
-    expiration-in-minutes: '30'
+    expiration-in-minutes: '1'
 

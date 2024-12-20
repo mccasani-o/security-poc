@@ -56,8 +56,5 @@ public class UsuarioPrincipal implements UserDetails {
         return this.usuarioEntity.isEstado();
     }
 
-    public static UsuarioPrincipal mapToUsuarioPrincipal(Usuario usuario){
 
-        return new UsuarioPrincipal(usuario);
-    }
 }

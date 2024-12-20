@@ -23,8 +23,9 @@ public class Usuario {
     private String email;
     private String clave;
     private boolean estado;
-
-    private int intentosFallido = 0;
+    private boolean noEstaBloqueado;
+    private boolean isMfa;
+    private int intentosFallido;
     private LocalDateTime tiempoBloqueo;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
