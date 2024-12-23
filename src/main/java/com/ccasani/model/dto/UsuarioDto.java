@@ -11,6 +11,8 @@ import java.util.Set;
 @Builder
 public class UsuarioDto {
     private Long id;
+    private String nombre;
+    private String apellido;
     private String email;
     private String clave;
     private boolean estado;

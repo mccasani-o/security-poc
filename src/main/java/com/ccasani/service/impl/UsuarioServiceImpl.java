@@ -30,8 +30,9 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
+import static com.ccasani.mapper.UsuarioMapper.mapToUsuario;
+import static com.ccasani.mapper.UsuarioMapper.mapToUsuarioDto;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.security.authentication.UsernamePasswordAuthenticationToken.unauthenticated;
 
@@ -53,8 +54,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     public void registarUsuario(RegistrarUsuarioRequest request) {
         Rol rol = Rol.builder().nombre("ROLE_ADMIN").permiso("READ_PRODUCT").build();
         rolRepository.save(rol);
-
-        this.usuarioRepository.save(this.mapToUsuario(request, rol));
+        this.usuarioRepository.save(mapToUsuario(request.getEmail(), this.passwordEncoder.encode(request.getClave()), rol));
     }
 
     @Override
@@ -114,21 +114,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     private UsuarioDto obtenerUsuario() {
         String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Usuario usuario = this.usuarioRepository.findByEmail(principal).orElseThrow();
-        return this.mapToUsuarioDto(usuario);
-    }
-
-    public static UsuarioDto mapToUsuarioDto(Usuario usuario) {
-        return UsuarioDto.builder()
-                .id(usuario.getId())
-                .email(usuario.getEmail())
-                .clave(usuario.getClave())
-                .estado(usuario.isEstado())
-                .noEstaBloqueado(usuario.isNoEstaBloqueado())
-                .isMfa(usuario.isMfa())
-                .intentosFallido(usuario.getIntentosFallido())
-                .tiempoBloqueo(usuario.getTiempoBloqueo())
-                .roles(usuario.getRoles())
-                .build();
+        return mapToUsuarioDto(usuario);
     }
 
 
@@ -142,14 +128,6 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
     }
 
-    private Usuario mapToUsuario(RegistrarUsuarioRequest request, Rol rol) {
-        return Usuario.builder()
-                .clave(this.passwordEncoder.encode(request.getClave()))
-                .email(request.getEmail())
-                .estado(true)
-                .roles(Set.of(rol))
-                .build();
-    }
 
     private Map<String, Object> generateExtraClaims(UsuarioPrincipal user) {
         Map<String, Object> extraClaims = new HashMap<>();
