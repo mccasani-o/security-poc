@@ -2,15 +2,15 @@ package com.ccasani.model.response;
 
 import com.ccasani.model.entity.Usuario;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
-
+@Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -21,9 +21,13 @@ public class UsuarioPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
-        usuarioEntity.getRoles().forEach(role -> authorityList.add(new SimpleGrantedAuthority(role.getNombre())));
-        return authorityList;
+
+        return this.usuarioEntity.getRoles().stream() // Stream de roles
+                .flatMap(rol -> Arrays.stream(rol.getPermiso().split(","))) // Dividir permisos y aplanarlos en un Stream
+                .map(String::trim) // Eliminar espacios en blanco alrededor de cada permiso
+                .map(SimpleGrantedAuthority::new) // Crear SimpleGrantedAuthority para cada permiso
+                .toList(); // Recopilar en una lista
+
     }
 
     @Override

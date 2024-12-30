@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.ccasani.mapper.UsuarioMapper.mapToUsuario;
 import static com.ccasani.mapper.UsuarioMapper.mapToUsuarioDto;
@@ -52,9 +53,10 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public void registarUsuario(RegistrarUsuarioRequest request) {
-        Rol rol = Rol.builder().nombre("ROLE_ADMIN").permiso("READ_PRODUCT").build();
+        Rol rol = Rol.builder().nombre("ROLE_USER").permiso("READ,UPDATE").build();
         rolRepository.save(rol);
-        this.usuarioRepository.save(mapToUsuario(request.getEmail(), this.passwordEncoder.encode(request.getClave()), rol));
+        request.setClave( this.passwordEncoder.encode(request.getClave()));
+        this.usuarioRepository.save(mapToUsuario(request, rol));
     }
 
     @Override
@@ -130,9 +132,13 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 
     private Map<String, Object> generateExtraClaims(UsuarioPrincipal user) {
+        String rolesAsString = user.getUsuarioEntity().getRoles()
+                .stream() // Convertir la lista de roles a un Stream
+                .map(Rol::getNombre) // Obtener el nombre del rol (asumiendo que Rol tiene un método getName)
+                .collect(Collectors.joining(",")); // Unir los nombres en un solo String separado por comas
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("name", user.getUsuarioEntity().getEmail());
-        extraClaims.put("role", user.getUsuarioEntity().getRoles());
+        extraClaims.put("role", rolesAsString);
         extraClaims.put("authorities", user.getAuthorities());
 
         return extraClaims;

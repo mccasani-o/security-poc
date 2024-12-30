@@ -38,7 +38,7 @@ server:
 security:
   jwt:
     secret-key: bWkgY2xhdmUgZXMgbXV5IHNlZ3VyYSAxMjM0NTY3OCBhYmNkZWZn
-    expiration-in-minutes: '1'
+    expiration-in-minutes: '10'
 application:
   title: security-poc
   version: 1.0

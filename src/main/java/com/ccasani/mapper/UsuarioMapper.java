@@ -3,6 +3,7 @@ package com.ccasani.mapper;
 import com.ccasani.model.dto.UsuarioDto;
 import com.ccasani.model.entity.Rol;
 import com.ccasani.model.entity.Usuario;
+import com.ccasani.model.request.RegistrarUsuarioRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 
@@ -21,10 +22,12 @@ public class UsuarioMapper {
         return usuarioDto;
     }
 
-    public static Usuario mapToUsuario(String email, String clave, Rol rol) {
+    public static Usuario mapToUsuario(RegistrarUsuarioRequest request, Rol rol) {
         return Usuario.builder()
-                .clave(clave)
-                .email(email)
+                .nombre(request.getNombre())
+                .apellido(request.getApellido())
+                .clave(request.getClave())
+                .email(request.getEmail())
                 .estado(true)
                 .roles(Set.of(rol))
                 .build();

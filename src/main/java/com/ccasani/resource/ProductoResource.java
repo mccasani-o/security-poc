@@ -2,24 +2,34 @@ package com.ccasani.resource;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/productos")
 public class ProductoResource {
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ')")
     @GetMapping
-    public String admin(){
-        return "ADMIN";
+    public String lista(){
+        return "Listar";
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping("/user")
-    public String user(){
-        return "USER";
+    @PreAuthorize("hasAuthority('INSERT')")
+    @PostMapping
+    public String insertar(){
+        return "Insertar";
+    }
+
+    @PreAuthorize("hasAuthority('UPDATE')")
+    @PutMapping
+    public String actualizar(){
+        return "Actualizar";
+    }
+
+    @PreAuthorize("hasAuthority('DELETE')")
+    @DeleteMapping
+    public String eliminar(){
+        return "Eliminar";
     }
 }
