@@ -79,7 +79,7 @@ public class UsuarioResource {
                 .fecha(LocalDateTime.now())
                 .status(OK)
                 .statusCode(OK.value())
-                .mensaje("Login exitoso")
+                .mensaje("Bienvenido")
                 .data(Map.of("token", loginResponse))
                 .build());
     }

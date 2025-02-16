@@ -40,6 +40,7 @@ public class HttpSecurityConfig {
                     authReqConfig.requestMatchers(HttpMethod.POST, "/api/usuarios/registro").permitAll();
                     authReqConfig.requestMatchers(HttpMethod.POST, "/api/usuarios/login").permitAll();
                     authReqConfig.requestMatchers(HttpMethod.GET, "/api/usuarios/verificar/**").permitAll();
+                    // authReqConfig.requestMatchers(HttpMethod.GET, "/api/menus/activo").permitAll();
                     authReqConfig.anyRequest().authenticated();
                 })
                 .exceptionHandling(ex -> {
