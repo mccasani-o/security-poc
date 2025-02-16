@@ -108,10 +108,10 @@ public class InventarioResource {
                 .build());
     }
 
-    @GetMapping("/download/report")
-    public ResponseEntity<Resource> downloadReport() {
+    @GetMapping("/producto/download/reporte")
+    public ResponseEntity<Resource> downloadReport(@RequestParam String producto, @RequestParam Integer numeroPagina, @RequestParam Integer tamanioPagina) {
         List<ProductoResponse> productoResponseList = new ArrayList<>();
-       this.inventarioService.listarProductos().iterator().forEachRemaining(productoResponseList::add);
+        this.inventarioService.productosPaginado(producto, numeroPagina, tamanioPagina).getProducto().iterator().forEachRemaining(productoResponseList::add);
 
         ProductoReporte report = new ProductoReporte(productoResponseList);
         HttpHeaders headers = new HttpHeaders();
