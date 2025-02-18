@@ -5,19 +5,23 @@ import com.ccasani.model.response.CustomHttpResponse;
 import com.ccasani.model.response.DataResponse;
 import com.ccasani.model.response.HttpResponse;
 import com.ccasani.model.response.ProductoResponse;
-import com.ccasani.reporte.ProductoReporte;
+import com.ccasani.reporte.enumeracion.ReporteType;
+import com.ccasani.reporte.facady.service.ProductoReporteService;
+import com.ccasani.reporte.strategy.service.ReportService;
 import com.ccasani.service.inf.InventarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +36,9 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 @RequestMapping("/api/inventario")
 public class InventarioResource {
     private final InventarioService inventarioService;
+    private final ReportService reportService;
+    private final ProductoReporteService productoReporteService;
+
 
     @GetMapping("/productos")
     public ResponseEntity<CustomHttpResponse> listarProductos(@RequestParam String producto, @RequestParam Integer numeroPagina, @RequestParam Integer tamanioPagina) {
@@ -107,11 +114,13 @@ public class InventarioResource {
                 .data(Map.of("categoria", this.inventarioService.listarCategorias()))
                 .build());
     }
-
+/*
     @GetMapping("/producto/download/reporte")
     public ResponseEntity<Resource> downloadReport(@RequestParam String producto, @RequestParam Integer numeroPagina, @RequestParam Integer tamanioPagina) {
         List<ProductoResponse> productoResponseList = new ArrayList<>();
-        this.inventarioService.productosPaginado(producto, numeroPagina, tamanioPagina).getProducto().iterator().forEachRemaining(productoResponseList::add);
+        this.inventarioService.productosPaginado(producto, numeroPagina, tamanioPagina).getProducto()
+                .stream().forEach(productoResponseList::add);
+                //.iterator().forEachRemaining(productoResponseList::add);
 
         ProductoReporte report = new ProductoReporte(productoResponseList);
         HttpHeaders headers = new HttpHeaders();
@@ -121,6 +130,36 @@ public class InventarioResource {
                 .headers(headers).body(report.export());
     }
 
+
+ */
+    @GetMapping("/producto/download/reporte")
+    public ResponseEntity<Resource> downloadReport(@RequestParam String producto,
+                                                   @RequestParam Integer numeroPagina,
+                                                   @RequestParam Integer tamanioPagina,
+                                                   @RequestParam ReporteType type) {
+
+        List<ProductoResponse> productoResponseList =this.inventarioService.productosPaginado(producto, numeroPagina, tamanioPagina).getProducto();
+
+
+        InputStreamResource report = this.reportService.generateReport(type,productoResponseList);
+      return   type.name().equals("EXCEL")?this.excel(report):this.pdf(report);
+    }
+
+    private ResponseEntity<Resource> excel( InputStreamResource report) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("File-Name", "producto-reporte.xlsx");
+        headers.add(CONTENT_DISPOSITION, "attachment;File-Name=producto-reporte.xlsx");
+        return ResponseEntity.ok().contentType(parseMediaType("application/vnd.ms-excel"))
+                .headers(headers).body(report);
+    }
+
+    private ResponseEntity<Resource> pdf( InputStreamResource report) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(ContentDisposition.builder("attachment").filename("invoice.pdf").build());
+        return ResponseEntity.ok()
+                .headers(headers).body(report);
+    }
     private URI getUri() {
         return URI.create(fromCurrentContextPath().path("/api/inventario").toUriString());
     }
