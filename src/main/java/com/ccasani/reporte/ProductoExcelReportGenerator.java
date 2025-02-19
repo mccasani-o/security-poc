@@ -1,4 +1,4 @@
-package com.ccasani.reporte.strategy;
+package com.ccasani.reporte;
 
 import com.ccasani.model.response.ProductoResponse;
 import com.ccasani.reporte.ReporteGerador;
@@ -6,23 +6,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.stereotype.Component;
 
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 @Slf4j
+@Component
 public class ProductoExcelReportGenerator implements ReporteGerador {
 
-    private final List<ProductoResponse> productoResponses;
 
-    public ProductoExcelReportGenerator(List<ProductoResponse> productoResponses) {
-        this.productoResponses = productoResponses;
-    }
 
 
     @Override
-    public InputStreamResource generateReport() {
+    public InputStreamResource generateReport(List<ProductoResponse> productos) {
         try (XSSFWorkbook workbook = new XSSFWorkbook();
              ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
@@ -44,7 +42,7 @@ public class ProductoExcelReportGenerator implements ReporteGerador {
 
             // Agregar datos
             int rowIndex = 1;
-            for(ProductoResponse producto: productoResponses) {
+            for(ProductoResponse producto: productos) {
                 Row row = sheet.createRow(rowIndex++);
                 row.createCell(0).setCellValue(producto.getIdProducto());
                 row.createCell(1).setCellValue(producto.getCategoria().getNombreCategoria());

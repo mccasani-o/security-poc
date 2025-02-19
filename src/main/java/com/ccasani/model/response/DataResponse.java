@@ -5,13 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Map;
 
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DataResponse {
 
-    private List<ProductoResponse>producto;
-    private Integer  total;
+    private List<ProductoResponse> producto;
+    private Integer total;
 }

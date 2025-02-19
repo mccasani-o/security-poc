@@ -57,7 +57,6 @@ public class InventarioServiceImpl implements InventarioService {
         return DataResponse.builder().producto(productos.stream().map(ProductoMapper::mapToProductoResponse).toList())
                 .total(this.productoRepository.findAll(specification).size())
                 .build();
-        // return productos.stream().map(ProductoMapper::mapToProductoResponse).toList();
     }
 
     @Override

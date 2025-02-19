@@ -1,4 +1,4 @@
-package com.ccasani.reporte.strategy;
+package com.ccasani.reporte;
 
 import com.ccasani.model.response.ProductoResponse;
 import com.ccasani.reporte.ReporteGerador;
@@ -9,21 +9,18 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 @Slf4j
+@Component
 public class ProductoPdfReportGenerator implements ReporteGerador {
-    private final List<ProductoResponse> productos;
-
-    public ProductoPdfReportGenerator(List<ProductoResponse> productos) {
-        this.productos = productos;
-    }
 
 
     @Override
-    public InputStreamResource generateReport() {
+    public InputStreamResource generateReport(List<ProductoResponse> productos) {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Document document = new Document();
             PdfWriter.getInstance(document, out);

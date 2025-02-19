@@ -1,23 +1,25 @@
 package com.ccasani.reporte.strategy.context;
-import com.ccasani.reporte.ReporteGerador;
 
+import com.ccasani.model.response.ProductoResponse;
+import com.ccasani.reporte.ReporteGerador;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class ReportContext {
 
-    private ReporteGerador reportGenerator;
+    private ReporteGerador reporteGerador;
 
-
-    public void setReportGenerator(ReporteGerador reportGenerator) {
-        this.reportGenerator = reportGenerator;
+    public void setReporteGerador(ReporteGerador reporteGerador) {
+        this.reporteGerador = reporteGerador;
     }
 
-    public InputStreamResource generateReport() {
-        if (reportGenerator == null) {
-            throw new IllegalStateException("No report generator selected");
+    public InputStreamResource generateReport(List<ProductoResponse> productos) {
+        if (reporteGerador == null) {
+            throw new IllegalStateException("No se ha configurado una estrategia de generación de reportes.");
         }
-        return reportGenerator.generateReport();
+        return reporteGerador.generateReport(productos);
     }
 }
